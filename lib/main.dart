@@ -20,23 +20,29 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: Text('webviewを使ったフィルターの実験'),
         ),
-        body: WebView(
-          // onWebViewCreatedはWebViewが生成された時に行う処理を記述できます
-          onWebViewCreated: (WebViewController webViewController) async { 
-            _controller = webViewController; // 生成されたWebViewController情報を取得する
-            await _loadHtmlFromAssets(); // HTMLファイルのURL（ローカルファイルの情報）をControllerに追加する処理
-          },
-          javascriptMode: JavascriptMode.unrestricted,
+        body: ListView(
+          itemExtent: 500,
+          children: <Widget>[
+            Image.asset('assets/samplebase64.png'),
+            WebView(
+              // onWebViewCreatedはWebViewが生成された時に行う処理を記述できます
+              onWebViewCreated: (WebViewController webViewController) async { 
+                _controller = webViewController; // 生成されたWebViewController情報を取得する
+                await _loadHtmlFromAssets(); // HTMLファイルのURL（ローカルファイルの情報）をControllerに追加する処理
+              },
+              javascriptMode: JavascriptMode.unrestricted,
+            ),
+          ],
         ),
         // 画面下にボタン配置
         floatingActionButton: FloatingActionButton(
           onPressed: _addFilter,
-        ),        
+        ),
       ),
     );
   }
  
-  /// Webページのボックスの色切り替え処理
+  /// フィルターをかけるfunctionを呼ぶ
   void _addFilter() {
     // JSメソッド呼び出し
     // WebViewControllerクラスのevaluateJavascriptの引数に呼び出すJSメソッドを入れる
