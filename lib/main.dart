@@ -7,8 +7,18 @@ import 'package:webview_flutter/webview_flutter.dart';
 void main() => runApp(MyApp());
  
 WebViewController _controller; // WebViewコントローラー
- 
-class MyApp extends StatelessWidget {
+
+String _title = "フィルター処理前";
+
+class MyApp extends StatefulWidget {
+
+  MyApp({Key key}) : super(key: key);
+
+  @override
+  _MyAppState createState() => new _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -18,7 +28,7 @@ class MyApp extends StatelessWidget {
       ),
       home: Scaffold(
         appBar: AppBar(
-          title: Text('webviewを使ったフィルターの実験'),
+          title: Text(_title),
         ),
         body: ListView(
           itemExtent: 500,
@@ -31,6 +41,16 @@ class MyApp extends StatelessWidget {
                 await _loadHtmlFromAssets(); // HTMLファイルのURL（ローカルファイルの情報）をControllerに追加する処理
               },
               javascriptMode: JavascriptMode.unrestricted,
+              // JSから関数を呼び出す為にjavascriptChannelsで紐付けを行う
+              javascriptChannels: Set.from([
+                JavascriptChannel(
+                  name: "getData",
+                  onMessageReceived: (JavascriptMessage result) {
+                    // イベントが発動した時に呼び出したい関数
+                    _changeTitle(result.message);
+                  }
+                ),
+              ]),
             ),
           ],
         ),
@@ -47,6 +67,13 @@ class MyApp extends StatelessWidget {
     // JSメソッド呼び出し
     // WebViewControllerクラスのevaluateJavascriptの引数に呼び出すJSメソッドを入れる
     _controller.evaluateJavascript("test();");
+  }
+
+  // タイトルを更新する処理
+  void _changeTitle(String str) {
+    setState(() {
+      _title = str;
+    });
   }
 
   /// HTMLファイルを読み込む処理
