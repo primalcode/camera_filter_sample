@@ -13,21 +13,24 @@
 
       function test() {
         var elem = document.getElementById("image01");
-        // elem.src = sample64;
-
         const base64 = 'data:image/png;base64,' + sample64
-
+        
+        const filterStyle = '1977'
+        const resultImage = new Image()
         const baseImage = new Image()
+
+        // Dartの関数呼び出し
+        resultImage.onload = function() {
+          getData.postMessage(resultImage.src);
+        }
+
         baseImage.onload = function() {
           filterous
           .importImage(baseImage)
-          .applyInstaFilter('1977')
-          .renderHtml(elem)
+          .applyInstaFilter(filterStyle)
+          .renderHtml(resultImage)
         }
         baseImage.src = base64
-
-        // Dartの関数呼び出し
-        getData.postMessage("フィルター処理完了");
 
       }
 
