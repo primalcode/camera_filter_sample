@@ -20,11 +20,13 @@ class MyApp extends StatefulWidget {
 }
 
 Uint8List _bytes;
+String _hoge;
 
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     _bytes = base64Decode(_base64);
+    _hoge = "hoge";
     return MaterialApp(
       title: 'camera filter sample',
       theme: ThemeData(
@@ -70,7 +72,7 @@ class _MyAppState extends State<MyApp> {
   void _addFilter() {
     // JSメソッド呼び出し
     // WebViewControllerクラスのevaluateJavascriptの引数に呼び出すJSメソッドを入れる
-    _controller.evaluateJavascript("test();");
+    _controller.evaluateJavascript("test(\"" + _base64 + "\");");
   }
 
   // フィルターかかったデータに入れ替え
